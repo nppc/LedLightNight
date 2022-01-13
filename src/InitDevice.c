@@ -9,9 +9,8 @@ void initHW(void){
   PCA0CPM2  = 0x48;
 
   // timer0 & 1 setup
-  TCON      = 0x50;
-  CKCON     = 0x0C;
-  TL0       = 10; // initial value
+  // don't start timers yet
+  CKCON     = CKCON_T0M_SYSTEMCLOCK | CKCON_T1M_SYSTEMCLOCK;
 
   // Timer2 configuration for delays
   CKCON     = CKCON_T2ML__SYSCLK;
@@ -19,16 +18,16 @@ void initHW(void){
   // 1ms period
   TMR2RLL   = 0x4C;
   TMR2RLH   = 0xA0;
-  IE_ET2 = 1;
+  //IE_ET2 = false; // do not fire interrupt routine. We will monitor flag in main loop
 
   // Set internal oscillator to run at its maximum frequency
    OSCICN = OSCICN_IOSCEN__ENABLED |
             OSCICN_IFCN__HFOSC_DIV_1;
 
    // Port init
-   P1MDOUT   = P1MDOUT_B4__PUSH_PULL | P1MDOUT_B5__PUSH_PULL; // debug on 1.5
-   P0SKIP    = 0xFF;
-   P1SKIP    = 0x03;
+   P1MDOUT   = P1MDOUT_B5__PUSH_PULL;
+   //P0SKIP    = 0xFF;
+   //P1SKIP    = 0x03;
    XBR1 = XBR1_XBARE__ENABLED;  // Enable crossbar
 
    // Interrupts priority and enabling timer interrupts

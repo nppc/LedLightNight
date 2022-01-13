@@ -15,8 +15,6 @@ typedef struct {
 extern fader_t fader;
 extern uint8_t fade_ms_cntr;
 
-extern bit timer1ms_tick;
-
 SI_SBIT(PIN_PWM, SFR_P1, 5);
 SI_SBIT(PIN_ONOFF, SFR_P1, 6);
 

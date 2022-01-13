@@ -1,8 +1,7 @@
 #include "main.h"
 #include "InitDevice.h"
 #include "gen.h"
-
-volatile bit timer1ms_tick;
+#include "pwm.h"
 
 volatile fader_t fader;
 volatile uint8_t fade_ms_cntr = 0;
@@ -28,19 +27,22 @@ void SiLabs_Startup (void)
 void main (void)
 {
   
-  fader.cntr_step = 0;
-  fader.state = FADE_NOTHING;
-
   initHW();
 
-  TCON_TR1 = 0;
-  TCON_TR1 = 1;
+  init_pwm();
 
-  IE_EA = 1; // Enable global interrupts
+  fader.cntr_step = 0;
+  fader.state = FADE_NOTHING;
+  
+  // debug
+  TCON_TR1 = false;
+  TCON_TR1 = true;
+
+  IE_EA = true; // Enable global interrupts
 
   delay_ms(100);
 
-   while (1)
+   while (true)
    {
      timer_routines();
    }
