@@ -1,23 +1,30 @@
 #include "gen.h"
-#include "main.h"
 
-volatile bit delay_tick;
-
-void delay_ms(uint16_t ms_count)
- {
-  uint16_t i;
-  delay_tick = false;
-  for(i=0; i<ms_count;i++){
-      while(!delay_tick);
-      delay_tick = false;
-  }
- }
+uint16_t cntr_ms_sec=0; // counter for second tick
+uint16_t cntrLED_ON_sec=0; // counter for LED
 
 void timer_routines(void){
   if(TMR2CN_TF2H){
     TMR2CN_TF2H = false;
-	
-	//delay functions
-	delay_tick = true;
+
+    ms_tick = true;
+
+    // generate seconds tick
+    if(cntr_ms_sec==0){
+        cntr_ms_sec = 1000;
+        if(cntrLED_ON_sec != 0) cntrLED_ON_sec--;
+    }else{
+        cntr_ms_sec--;
+    }
   }
+}
+
+bit setLedState(void){
+  bit st = true;
+  if(PIN_ONOFF){
+      cntrLED_ON_sec = LEDONTIME;
+  }else if(cntrLED_ON_sec==0){
+      st = false;
+  }
+  return st;
 }
